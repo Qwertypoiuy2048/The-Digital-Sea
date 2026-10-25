@@ -64,7 +64,7 @@ Before building the full world, test one compact vertical slice:
 - Two program types with different behaviors
 - One upgrade choice
 - One territory-control decision
-- A clear objective that can be completed in 5–10 minutes
+<!-- - A clear objective that can be completed in 5–10 minutes -->
 
 The prototype succeeds if exploring, choosing when to engage, and spending compute power already feel interesting without requiring a large amount of content.
 
@@ -175,6 +175,7 @@ The player may attract attention by:
 - Attacking protected infrastructure
 - Creating unstable or highly complex processes
 - Interfering with other major programs
+- Obtaining, storing, or using more dangerous subroutines or abilities
 
 This creates an important distinction between being powerful and being conspicuous. A cautious player may grow slowly and hide their capabilities, while an aggressive player may become strong enough to challenge patrols but draw increasingly dangerous attention.
 
@@ -328,13 +329,15 @@ Admin patrols should communicate danger through system-level changes before dire
 
 The player should understand that attention is accumulating before the Admin arrives. This makes stealth and restraint readable without requiring a large tutorial explanation.
 
+The Admin should never be a reachable entity, avoiding and subverting patrols should not be hard and defeating some will happen, but simply destroying patrols should never become a default decision
+
 ## Communication principles
 
 - Teach through changes in what the player can perceive.
 - Use consistent visual categories for active, dormant, blocked, hostile, and unknown states.
 - Show resource costs before the player commits to an action.
 - Let experimentation reveal rules, but make failure understandable.
-- Replace generic experience levels with newly understood capabilities and newly accessible relationships.
+- Replace generic experience levels with newly understood capabilities.
 
 ## Player input and output by game stage
 
@@ -495,31 +498,6 @@ The first hour should probably answer these questions without requiring an endga
 - Deep Process
 - The Living Network
 
-### Program or evolution focused
-
-- Emergence
-- Forkborn
-- Process Zero
-- First Instance
-- Recursive Dawn
-- Bootstrap
-- Seed Process
-- Cold Start
-- Runtime
-- The Growing Code
-
-### More mysterious or literary
-
-- Beneath the Root
-- Ghosts in the Stack
-- Where the Servers Sleep
-- The Last Protocol
-- An Ocean of Errors
-- The Quiet Machine
-- Children of the Cache
-- After the Admin
-- The Unwritten System
-- Memory Without a Host
 
 ### Names that emphasize exploration
 
@@ -534,4 +512,4 @@ The first hour should probably answer these questions without requiring an endga
 - Trace and Transfer
 - Network Bloom
 
-The strongest working titles at this stage may be **Signal Drift**, **Deep Process**, **First Instance**, **The Digital Sea**, and **Forkborn**. They leave room for the eventual story and do not commit the game to a specific ending.
+The strongest working titles at this stage may be **Signal Drift**, **Deep Process**, and **The Digital Sea**. They leave room for the eventual story and do not commit the game to a specific ending.
