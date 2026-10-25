@@ -17,6 +17,11 @@ NETWORK_LAYER_SPACING = 190
 # Main colors. Alpha values are used when drawing onto transparent surfaces.
 BACKGROUND_COLOR = (7, 20, 33)  # SVG background-gradient's darkest blue
 GRID_COLOR = BACKGROUND_COLOR
+BACKGROUND_TOP_COLOR = (7, 20, 33)  # #071421
+BACKGROUND_BOTTOM_COLOR = (17, 24, 42)  # #11182a
+CURRENT_LINE_COLOR = (111, 200, 207, 14)  # #6fc8cf at low opacity
+CURRENT_GLOW_COLOR = (61, 217, 208, 16)  # #3dd9d0, intentionally subtle
+CURRENT_GLOW_STEPS = 20
 
 # Network connections, based on the SVG mockup.
 CURRENT_COLOR = (78, 200, 210)
@@ -24,6 +29,11 @@ CONNECTION_COLOR = (120, 146, 183, 166)  # #7892b7 at 65% opacity
 PLAYER_CONNECTION_COLOR = (67, 228, 214, 242)  # #43e4d6 at 95% opacity
 PLAYER_CONNECTION_CORE_COLOR = (178, 255, 247, 204)  # #b2fff7 at 80% opacity
 UNSTABLE_CONNECTION_COLOR = (212, 168, 90, 230)  # #d4a85a at 90% opacity
+MONITORED_CONNECTION_COLOR = (168, 94, 224, 235)
+MONITORED_NODE_STROKE = (191, 110, 241, 240)
+MONITORED_NODE_FILL = (93, 46, 125, 155)
+MONITOR_MARKER_COLOR = (214, 130, 255, 255)
+LOCK_COLOR = (240, 92, 108, 240)
 
 # Node colors, based on the SVG active/cached device layers.
 CACHED_NODE_FILL = (135, 146, 163, 107)  # #8792a3 at 42% opacity
@@ -59,6 +69,7 @@ WEAK_CONNECTION_WIDTH = 3
 
 # Input settings
 CONNECTION_SELECTION_DISTANCE = 12
+LOCK_MARKER_SIZE = 9
 
 
 def node_radius(size: str) -> float:

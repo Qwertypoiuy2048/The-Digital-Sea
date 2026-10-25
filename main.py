@@ -66,6 +66,52 @@ def draw_transparent_circle(surface, color, center, radius, width=0):
     surface.blit(layer, (center[0] - radius - 1, center[1] - radius - 1))
 
 
+def draw_fuzzy_glow(surface, color, center, radius, steps):
+    """Draw a subtle radial glow with a soft, non-circular edge."""
+    red, green, blue, alpha = color
+    for step in range(steps, 0, -1):
+        amount = step / steps
+        current_radius = max(1, round(radius * amount))
+        # The outside layers are nearly transparent; the glow fades inward.
+        current_alpha = max(1, round(alpha * (1 - amount) ** 2))
+        draw_transparent_circle(
+            surface,
+            (red, green, blue, current_alpha),
+            center,
+            current_radius,
+        )
+
+
+def draw_cubic_curve(surface, color, points, width=1, steps=36):
+    """Draw a smooth cubic curve from four control points."""
+    curve_points = []
+    for index in range(steps + 1):
+        t = index / steps
+        inverse = 1 - t
+        point = (
+            inverse**3 * pygame.Vector2(points[0])
+            + 3 * inverse**2 * t * pygame.Vector2(points[1])
+            + 3 * inverse * t**2 * pygame.Vector2(points[2])
+            + t**3 * pygame.Vector2(points[3])
+        )
+        curve_points.append(point)
+    layer = pygame.Surface(surface.get_size(), pygame.SRCALPHA)
+    pygame.draw.lines(layer, color, False, curve_points, width)
+    surface.blit(layer, (0, 0))
+
+
+def draw_lock(surface, center, scale=1.0):
+    """Draw a small red lock marker for an encrypted connection."""
+    size = max(5, round(constants.LOCK_MARKER_SIZE * scale))
+    layer = pygame.Surface(surface.get_size(), pygame.SRCALPHA)
+    body = pygame.Rect(round(center[0] - size), round(center[1] - size * 0.05), size * 2, round(size * 1.45))
+    pygame.draw.rect(layer, constants.LOCK_COLOR, body, border_radius=max(2, size // 3))
+    shackle = pygame.Rect(round(center[0] - size * 0.65), round(center[1] - size * 0.85), round(size * 1.3), round(size * 1.25))
+    pygame.draw.arc(layer, constants.LOCK_COLOR, shackle, math.pi, 2 * math.pi, max(2, round(size * 0.25)))
+    pygame.draw.circle(layer, constants.BACKGROUND_COLOR, (round(center[0]), round(center[1] + size * 0.55)), max(1, round(size * 0.16)))
+    surface.blit(layer, (0, 0))
+
+
 def compute_node_positions(nodes, connections, primary_id):
     """Place nodes in deterministic rings based on graph distance from primary."""
     node_ids = [node["id"] for node in nodes]
@@ -125,6 +171,9 @@ class NetworkScreen:
         positions = compute_node_positions(cache["nodes"], self.connections, self.primary_node)
         for node_id, node in self.nodes.items():
             node["position"] = positions[node_id]
+        self.monitored_nodes = {
+            node["id"] for node in cache["nodes"] if node.get("monitored", False)
+        }
         self.camera = pygame.Vector2(constants.STARTING_CAMERA)
         self.zoom = constants.STARTING_ZOOM
         self.dragging = False
@@ -190,15 +239,39 @@ class NetworkScreen:
             self.draw_readout(surface)
 
     def draw_background(self, surface):
-        surface.fill(constants.BACKGROUND_COLOR)
+        width, height = surface.get_size()
+        gradient = pygame.Surface((width, height))
+        for y in range(height):
+            amount = y / max(1, height - 1)
+            color = tuple(round(
+                constants.BACKGROUND_TOP_COLOR[channel] * (1 - amount)
+                + constants.BACKGROUND_BOTTOM_COLOR[channel] * amount
+            ) for channel in range(3))
+            pygame.draw.line(gradient, color, (0, y), (width, y))
+        surface.blit(gradient, (0, 0))
+
+        atmosphere = pygame.Surface((width, height), pygame.SRCALPHA)
+        for center, radius in [((width * 0.25, height * 0.35), 250), ((width * 0.75, height * 0.7), 290)]:
+            draw_fuzzy_glow(atmosphere, constants.CURRENT_GLOW_COLOR, center, radius, constants.CURRENT_GLOW_STEPS)
+        for y in range(-height, height * 2, 120):
+            draw_cubic_curve(
+                atmosphere,
+                constants.CURRENT_LINE_COLOR,
+                [(-80, y), (width * 0.25, y - 80), (width * 0.7, y + 90), (width + 80, y - 10)],
+                1,
+            )
+        surface.blit(atmosphere, (0, 0))
 
     def draw_connection(self, surface, connection, index):
         start = self.world_to_screen(self.nodes[connection["from"]]["position"])
         end = self.world_to_screen(self.nodes[connection["to"]]["position"])
         selected = self.selected == ("connection", index)
-        color = (constants.UNSTABLE_CONNECTION_COLOR
-                 if connection.get("stability") == "unstable"
-                 else constants.CONNECTION_COLOR)
+        if connection.get("monitored", False):
+            color = constants.MONITORED_CONNECTION_COLOR
+        else:
+            color = (constants.UNSTABLE_CONNECTION_COLOR
+                     if connection.get("stability") == "unstable"
+                     else constants.CONNECTION_COLOR)
         if selected:
             color = constants.PLAYER_CONNECTION_COLOR
         width = (constants.STRONG_CONNECTION_WIDTH
@@ -209,7 +282,9 @@ class NetworkScreen:
             draw_dashed_line(surface, color, start, end, width)
         else:
             draw_transparent_line(surface, color, start, end, width)
-        if connection.get("stability") != "unstable" and connection.get("bandwidth") == "strong":
+        if (not connection.get("monitored", False)
+                and connection.get("stability") != "unstable"
+                and connection.get("bandwidth") == "strong"):
             draw_transparent_line(
                 surface,
                 constants.PLAYER_CONNECTION_CORE_COLOR,
@@ -217,6 +292,9 @@ class NetworkScreen:
                 end,
                 max(1, round(2 * self.zoom)),
             )
+        if connection.get("security") == "encrypted":
+            midpoint = (start + end) / 2
+            draw_lock(surface, midpoint, self.zoom)
 
     def draw_node(self, surface, node):
         position = self.world_to_screen(node["position"])
@@ -224,6 +302,7 @@ class NetworkScreen:
         node_id = node["id"]
         is_primary = node_id == self.primary_node
         is_secondary = node_id in self.secondary_nodes
+        is_monitored = node_id in self.monitored_nodes
         selected = self.selected == ("node", node["id"])
         if is_primary or is_secondary:
             if is_primary:
@@ -247,12 +326,18 @@ class NetworkScreen:
             draw_transparent_circle(surface, node_core, position, max(2, radius - round(7 * self.zoom)))
             draw_transparent_circle(surface, node_inner, position, max(2, radius - round(17 * self.zoom)))
             draw_transparent_circle(surface, node_center, position, max(2, round(radius * 0.2)))
+            if is_monitored:
+                draw_transparent_circle(surface, constants.MONITORED_NODE_STROKE, position, radius + round(13 * self.zoom), max(2, round(2 * self.zoom)))
             if selected:
                 draw_transparent_circle(surface, constants.SELECTED_NODE_COLOR, position, radius + 5, 2)
         else:
             # Cached devices are deliberately quieter and more transparent.
-            draw_transparent_circle(surface, constants.CACHED_NODE_FILL, position, radius)
-            draw_transparent_circle(surface, constants.CACHED_NODE_STROKE, position, radius, max(1, round(2 * self.zoom)))
+            fill = constants.MONITORED_NODE_FILL if is_monitored else constants.CACHED_NODE_FILL
+            stroke = constants.MONITORED_NODE_STROKE if is_monitored else constants.CACHED_NODE_STROKE
+            draw_transparent_circle(surface, fill, position, radius)
+            draw_transparent_circle(surface, stroke, position, radius, max(1, round(2 * self.zoom)))
+            if is_monitored:
+                draw_transparent_circle(surface, constants.MONITOR_MARKER_COLOR, position, max(3, round(5 * self.zoom)))
             if selected:
                 draw_transparent_circle(surface, constants.SELECTED_NODE_COLOR, position, radius + 5, 2)
         node_label = node.get("label")
@@ -271,7 +356,7 @@ class NetworkScreen:
         panel_surface.fill(constants.PANEL_COLOR)
         surface.blit(panel_surface, panel.topleft)
         pygame.draw.rect(surface, constants.CURRENT_COLOR, panel, 1, border_radius=8)
-        kind, value = self.selected
+        kind, value = self.selected # pyright: ignore[reportGeneralTypeIssues]
         if kind == "node":
             node = self.nodes[value]
             lines = [node.get("label", value), f"ID: {value}",
