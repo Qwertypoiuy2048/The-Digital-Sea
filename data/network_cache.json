@@ -1,0 +1,110 @@
+{
+  "nodes": [
+    {
+      "id": "001",
+      "state": "active",
+      "size": "small",
+      "label": "Primary"
+    },
+    {
+      "id": "002",
+      "state": "cached",
+      "size": "medium",
+      "label": "Unknown"
+    },
+    {
+      "id": "112",
+      "state": "cached",
+      "size": "large",
+      "label": "Unknown"
+    },
+    {
+      "id": "003",
+      "state": "active",
+      "size": "medium",
+      "label": "Unknown"
+    },
+    {
+      "id": "004",
+      "state": "offline",
+      "size": "large",
+      "label": "Unknown"
+    },
+    {
+      "id": "005",
+      "state": "active",
+      "size": "small",
+      "label": "Unknown"
+    },
+    {
+      "id": "006",
+      "state": "standby",
+      "size": "small",
+      "label": "Unknown"
+    },
+    {
+      "id": "007",
+      "state": "active",
+      "size": "medium",
+      "label": "Unknown"
+    }
+  ],
+  "connections": [
+    {
+      "from": "001",
+      "to": "002",
+      "bandwidth": "weak",
+      "stability": "unstable",
+      "security": "open"
+    },
+    {
+      "from": "002",
+      "to": "112",
+      "bandwidth": "strong",
+      "stability": "stable",
+      "security": "unknown"
+    },
+    {
+      "from": "001",
+      "to": "003",
+      "bandwidth": "strong",
+      "stability": "stable",
+      "security": "encrypted"
+    },
+    {
+      "from": "003",
+      "to": "004",
+      "bandwidth": "strong",
+      "stability": "unstable",
+      "security": "encrypted"
+    },
+    {
+      "from": "001",
+      "to": "005",
+      "bandwidth": "weak",
+      "stability": "stable",
+      "security": "open"
+    },
+    {
+      "from": "005",
+      "to": "006",
+      "bandwidth": "medium",
+      "stability": "unstable",
+      "security": "open"
+    },
+    {
+      "from": "003",
+      "to": "007",
+      "bandwidth": "strong",
+      "stability": "stable",
+      "security": "open"
+    },
+    {
+      "from": "007",
+      "to": "004",
+      "bandwidth": "strong",
+      "stability": "stable",
+      "security": "encrypted"
+    }
+  ]
+}

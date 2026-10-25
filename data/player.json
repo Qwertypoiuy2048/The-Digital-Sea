@@ -1,0 +1,19 @@
+{
+  "playerId": "program-001",
+  "scanner": {
+    "level": "basic",
+    "capabilities": {
+      "scanDistance": 1,
+      "nodeSize": true,
+      "nodePower": false,
+      "nodePrograms": false,
+      "connectionBandwidth": true,
+      "connectionStability": true,
+      "connectionSecurity": true
+    }
+  },
+  "activeDevices": [
+    "001"
+  ],
+  "compute": 10
+}
