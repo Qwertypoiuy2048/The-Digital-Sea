@@ -1,0 +1,115 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="1280" viewBox="0 0 720 1280" role="img" aria-labelledby="title desc">
+  <title id="title">Digital Sea network screen</title>
+  <desc id="desc">A portrait fullscreen network map showing three active player devices, cached devices, and connections whose thickness, dash pattern, and security markers communicate scan results.</desc>
+  <defs>
+    <linearGradient id="background-gradient" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#071421"/>
+      <stop offset="0.52" stop-color="#0b1d2b"/>
+      <stop offset="1" stop-color="#11182a"/>
+    </linearGradient>
+    <radialGradient id="current-glow" cx="50%" cy="50%" r="50%">
+      <stop offset="0" stop-color="#3dd9d0" stop-opacity="0.16"/>
+      <stop offset="1" stop-color="#3dd9d0" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="player-glow" x="-100%" y="-100%" width="300%" height="300%">
+      <feGaussianBlur stdDeviation="12" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="soft-glow" x="-100%" y="-100%" width="300%" height="300%">
+      <feGaussianBlur stdDeviation="5" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <pattern id="current-lines" width="120" height="120" patternUnits="userSpaceOnUse" patternTransform="rotate(18)">
+      <path d="M0 20 C35 0 85 40 120 20" fill="none" stroke="#6fc8cf" stroke-opacity="0.055" stroke-width="2"/>
+      <path d="M0 68 C35 48 85 88 120 68" fill="none" stroke="#6fc8cf" stroke-opacity="0.04" stroke-width="1"/>
+    </pattern>
+  </defs>
+
+  <!-- Fullscreen digital-sea background -->
+  <rect id="network-background" width="720" height="1280" fill="url(#background-gradient)"/>
+  <rect id="network-current-field" width="720" height="1280" fill="url(#current-lines)"/>
+  <circle cx="180" cy="450" r="250" fill="url(#current-glow)"/>
+  <circle cx="545" cy="860" r="290" fill="url(#current-glow)" opacity="0.75"/>
+  <path d="M-40 650 C170 560 220 760 400 650 S650 520 760 610" fill="none" stroke="#4ec8d2" stroke-opacity="0.18" stroke-width="2"/>
+  <path d="M-40 930 C170 830 250 1020 430 900 S650 760 760 850" fill="none" stroke="#7b94df" stroke-opacity="0.12" stroke-width="2"/>
+
+  <!-- Cached connection traces: ghosted, not pulsing -->
+  <g id="cached-connections" fill="none" stroke="#8d99ac" stroke-opacity="0.24" stroke-width="4">
+    <path id="connection-cache-north" d="M260 430 C205 350 150 285 120 210"/>
+    <path id="connection-cache-east" d="M420 520 C510 455 580 390 625 320" stroke-dasharray="11 12"/>
+    <path id="connection-cache-south" d="M520 820 C430 940 365 1025 300 1115"/>
+  </g>
+
+  <!-- Visible connections: width communicates bandwidth; dashed means unstable -->
+  <g id="visible-connections" fill="none" stroke-linecap="round">
+    <path id="connection-main-cluster" d="M260 430 C310 455 365 485 420 520" stroke="#43e4d6" stroke-width="16" opacity="0.95" filter="url(#soft-glow)"/>
+    <path id="connection-main-cluster-core" d="M260 430 C310 455 365 485 420 520" stroke="#b2fff7" stroke-width="4" opacity="0.8"/>
+    <path id="connection-main-to-third" d="M420 520 C455 610 485 715 520 820" stroke="#67c6d2" stroke-width="7" opacity="0.82"/>
+    <path id="connection-third-unstable" d="M520 820 C575 820 625 780 675 720" stroke="#d4a85a" stroke-width="6" stroke-dasharray="15 12" opacity="0.9"/>
+    <path id="connection-cache-visible" d="M260 430 C195 520 145 610 110 710" stroke="#7892b7" stroke-width="4" opacity="0.65"/>
+  </g>
+
+  <!-- Flow pulses: visible connections only -->
+  <g id="connection-pulses" fill="#b2fff7" filter="url(#soft-glow)" opacity="0.9">
+    <circle cx="327" cy="465" r="5"><animate attributeName="opacity" values="0;1;0" dur="2.7s" repeatCount="indefinite"/></circle>
+    <circle cx="465" cy="660" r="4"><animate attributeName="opacity" values="0;1;0" dur="3.6s" begin="0.8s" repeatCount="indefinite"/></circle>
+  </g>
+
+  <!-- Cached devices: reduced opacity, desaturated, no pulse, small cached marker -->
+  <g id="cached-devices" opacity="0.42" fill="#8792a3" stroke="#a7b0bd" stroke-width="3">
+    <g id="cached-device-north" transform="translate(120 210)">
+      <circle r="34"/>
+      <path d="M-10 -10 L10 -10 L10 10 L-10 10 Z" fill="none" stroke="#c4ccd6" stroke-width="2"/>
+      <text x="17" y="-18" fill="#c4ccd6" stroke="none" font-family="ui-monospace,monospace" font-size="13">C</text>
+    </g>
+    <g id="cached-device-east" transform="translate(625 320)">
+      <circle r="23"/>
+      <path d="M-7 -7 L7 -7 L7 7 L-7 7 Z" fill="none" stroke="#c4ccd6" stroke-width="2"/>
+      <text x="13" y="-13" fill="#c4ccd6" stroke="none" font-family="ui-monospace,monospace" font-size="11">C</text>
+    </g>
+    <g id="cached-device-south" transform="translate(300 1115)">
+      <circle r="48"/>
+      <path d="M-13 -13 L13 -13 L13 13 L-13 13 Z" fill="none" stroke="#c4ccd6" stroke-width="2"/>
+      <text x="23" y="-25" fill="#c4ccd6" stroke="none" font-family="ui-monospace,monospace" font-size="15">C</text>
+    </g>
+  </g>
+
+  <!-- Three active player devices -->
+  <g id="active-player-devices">
+    <!-- Main device A -->
+    <g id="player-device-primary-a" transform="translate(260 430)" filter="url(#player-glow)">
+      <circle r="72" fill="#2bd9cf" fill-opacity="0.16" stroke="#4df6e7" stroke-width="5"/>
+      <circle r="48" fill="#123b49" stroke="#83fff2" stroke-width="4"/>
+      <circle r="31" fill="#28bcb7" fill-opacity="0.8"/>
+      <circle r="10" fill="#c9fffb"/>
+    </g>
+    <!-- Main device B -->
+    <g id="player-device-primary-b" transform="translate(420 520)" filter="url(#player-glow)">
+      <circle r="63" fill="#2bd9cf" fill-opacity="0.16" stroke="#4df6e7" stroke-width="5"/>
+      <circle r="42" fill="#123b49" stroke="#83fff2" stroke-width="4"/>
+      <circle r="26" fill="#28bcb7" fill-opacity="0.8"/>
+      <circle r="9" fill="#c9fffb"/>
+    </g>
+    <!-- Secondary active device -->
+    <g id="player-device-secondary" transform="translate(520 820)" filter="url(#soft-glow)" opacity="0.72">
+      <circle r="49" fill="#327a83" fill-opacity="0.2" stroke="#68b6bd" stroke-width="4"/>
+      <circle r="32" fill="#1b3b4a" stroke="#75c2c5" stroke-width="3"/>
+      <circle r="18" fill="#4c8e98"/>
+      <circle r="7" fill="#c0e7e5"/>
+    </g>
+  </g>
+
+  <!-- Direct labels; no persistent legend -->
+  <g id="device-labels" fill="#d7f7f5" font-family="ui-monospace,monospace" font-size="16">
+    <text x="260" y="535" text-anchor="middle">PRIMARY / A</text>
+    <text x="420" y="610" text-anchor="middle">PRIMARY / B</text>
+    <text x="520" y="890" text-anchor="middle" fill="#9cc4c5">ACTIVE / SECONDARY</text>
+  </g>
+
+  <!-- Basic scan readout, intentionally compact and direct -->
+  <g id="scan-status" font-family="ui-monospace,monospace" fill="#b8d9d8">
+    <text x="36" y="52" font-size="15" fill="#7fe1db">NETWORK SCAN // BASIC</text>
+    <text x="36" y="78" font-size="13" opacity="0.72">VISIBLE + CACHED CONNECTIONS</text>
+    <text x="36" y="1232" font-size="13" opacity="0.7">3 ACTIVE DEVICES  ·  3 CACHED DEVICES</text>
+  </g>
+</svg>

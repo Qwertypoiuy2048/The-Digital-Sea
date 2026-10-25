@@ -1,0 +1,141 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="1280" viewBox="0 0 720 1280" role="img" aria-labelledby="title desc">
+  <title id="title">Digital Sea cached route planning screen</title>
+  <desc id="desc">A portrait fullscreen network map with one primary active device, one secondary active device, many cached devices, locked and monitored routes, and a safe highlighted path between two scanned nodes.</desc>
+  <defs>
+    <linearGradient id="background-gradient" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#071421"/>
+      <stop offset="0.54" stop-color="#0c1c2b"/>
+      <stop offset="1" stop-color="#15172a"/>
+    </linearGradient>
+    <radialGradient id="current-glow" cx="50%" cy="50%" r="50%">
+      <stop offset="0" stop-color="#38d8cf" stop-opacity="0.15"/>
+      <stop offset="1" stop-color="#38d8cf" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="player-glow" x="-100%" y="-100%" width="300%" height="300%">
+      <feGaussianBlur stdDeviation="12" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="route-glow" x="-100%" y="-100%" width="300%" height="300%">
+      <feGaussianBlur stdDeviation="7" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <pattern id="current-lines" width="120" height="120" patternUnits="userSpaceOnUse" patternTransform="rotate(18)">
+      <path d="M0 20 C35 0 85 40 120 20" fill="none" stroke="#6fc8cf" stroke-opacity="0.055" stroke-width="2"/>
+      <path d="M0 68 C35 48 85 88 120 68" fill="none" stroke="#6fc8cf" stroke-opacity="0.04" stroke-width="1"/>
+    </pattern>
+  </defs>
+
+  <rect id="network-background" width="720" height="1280" fill="url(#background-gradient)"/>
+  <rect id="network-current-field" width="720" height="1280" fill="url(#current-lines)"/>
+  <circle cx="170" cy="320" r="250" fill="url(#current-glow)"/>
+  <circle cx="535" cy="950" r="300" fill="url(#current-glow)" opacity="0.7"/>
+  <path d="M-40 520 C120 420 240 590 390 500 S630 410 760 500" fill="none" stroke="#4ec8d2" stroke-opacity="0.12" stroke-width="2"/>
+  <path d="M-40 1030 C160 930 240 1120 410 1000 S640 890 760 970" fill="none" stroke="#7b94df" stroke-opacity="0.1" stroke-width="2"/>
+
+  <!-- Primary active device -->
+  <g id="primary-active-device" transform="translate(142 240)" filter="url(#player-glow)">
+    <circle r="78" fill="#2bd9cf" fill-opacity="0.15" stroke="#4df6e7" stroke-width="5"/>
+    <circle r="51" fill="#123b49" stroke="#83fff2" stroke-width="4"/>
+    <circle r="32" fill="#28bcb7" fill-opacity="0.82"/>
+    <circle r="10" fill="#c9fffb"/>
+  </g>
+
+  <!-- Primary device connections: four classified paths -->
+  <g id="primary-connections" fill="none" stroke-linecap="round">
+    <!-- Node 1: strong, locked -->
+    <path id="primary-node-1-connection" d="M142 240 C90 185 75 135 92 90" stroke="#63d1dc" stroke-width="12"/>
+    <!-- Node 2: weak, locked -->
+    <path id="primary-node-2-connection" d="M142 240 C215 175 270 125 315 82" stroke="#7290a1" stroke-width="4"/>
+    <!-- Node 3: weak, unstable; route begins here -->
+    <path id="primary-node-3-connection" d="M142 240 C205 285 245 325 285 365" stroke="#b5a36b" stroke-width="5" stroke-dasharray="13 11"/>
+    <!-- Node 4: strong, monitored -->
+    <path id="primary-node-4-connection" d="M142 240 C92 335 80 410 92 480" stroke="#9a60bd" stroke-width="12"/>
+  </g>
+
+  <!-- Cached network: each cached node participates in 2-5 connections -->
+  <g id="cached-connections" fill="none" stroke-linecap="round">
+    <path id="cache-connection-1-2" d="M285 365 C335 355 380 350 425 365" stroke="#6e8294" stroke-width="5"/>
+    <path id="cache-connection-1-branch" d="M285 365 C250 410 220 450 210 500" stroke="#8b6f83" stroke-width="4" stroke-dasharray="12 10"/>
+    <path id="cache-connection-2-3" d="M425 365 C470 375 520 390 560 425" stroke="#778b9b" stroke-width="9"/>
+    <path id="cache-connection-2-branch" d="M425 365 C430 315 430 275 420 230" stroke="#955d9b" stroke-width="7"/>
+    <path id="cache-connection-3-4" d="M560 425 C550 490 530 545 500 600" stroke="#6b8492" stroke-width="5" stroke-dasharray="13 11"/>
+    <path id="cache-connection-3-branch" d="M560 425 C620 465 650 505 665 560" stroke="#728b9b" stroke-width="8"/>
+    <path id="cache-connection-4-5" d="M500 600 C480 660 465 715 450 770" stroke="#728a9b" stroke-width="9"/>
+    <path id="cache-connection-4-branch" d="M500 600 C555 625 600 655 625 700" stroke="#967094" stroke-width="5" stroke-dasharray="12 10"/>
+    <path id="cache-connection-5-6" d="M450 770 C450 835 460 880 475 930" stroke="#748d9c" stroke-width="5"/>
+    <path id="cache-connection-5-branch" d="M450 770 C385 775 330 790 285 820" stroke="#778c9b" stroke-width="4"/>
+    <path id="cache-connection-6-secondary" d="M475 930 C500 970 525 1000 550 1030" stroke="#68d6d2" stroke-width="11"/>
+    <path id="cache-connection-6-branch" d="M475 930 C405 955 355 985 320 1030" stroke="#8993a0" stroke-width="5"/>
+  </g>
+
+  <!-- Safe route from primary node 3 to secondary node 1; avoids locked and monitored paths -->
+  <g id="safe-route" fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <path id="safe-route-glow" d="M142 240 C205 285 245 325 285 365 C335 355 380 350 425 365 C470 375 520 390 560 425 C550 490 530 545 500 600 C480 660 465 715 450 770 C450 835 460 880 475 930 C500 970 525 1000 550 1030" stroke="#5ff5df" stroke-width="22" opacity="0.18" filter="url(#route-glow)"/>
+    <path id="safe-route-core" d="M142 240 C205 285 245 325 285 365 C335 355 380 350 425 365 C470 375 520 390 560 425 C550 490 530 545 500 600 C480 660 465 715 450 770 C450 835 460 880 475 930 C500 970 525 1000 550 1030" stroke="#9bfff1" stroke-width="4"/>
+  </g>
+
+  <!-- Cached device nodes; ghosted and non-pulsing -->
+  <g id="cached-devices" opacity="0.48" fill="#8491a1" stroke="#a5afb9" stroke-width="3">
+    <g id="cached-device-1" transform="translate(285 365)"><circle r="29"/><circle r="7" fill="#bbc3ca" stroke="none"/><text x="-5" y="-38" fill="#c2cbd0" stroke="none" font-family="ui-monospace,monospace" font-size="13">C1</text></g>
+    <g id="cached-device-2" transform="translate(425 365)"><circle r="39"/><circle r="8" fill="#bbc3ca" stroke="none"/><text x="-5" y="-50" fill="#c2cbd0" stroke="none" font-family="ui-monospace,monospace" font-size="13">C2</text></g>
+    <g id="cached-device-3" transform="translate(560 425)"><circle r="25"/><circle r="6" fill="#bbc3ca" stroke="none"/><text x="-5" y="-34" fill="#c2cbd0" stroke="none" font-family="ui-monospace,monospace" font-size="13">C3</text></g>
+    <g id="cached-device-4" transform="translate(500 600)"><circle r="34"/><circle r="7" fill="#bbc3ca" stroke="none"/><text x="-5" y="-45" fill="#c2cbd0" stroke="none" font-family="ui-monospace,monospace" font-size="13">C4</text></g>
+    <g id="cached-device-5" transform="translate(450 770)"><circle r="28"/><circle r="6" fill="#bbc3ca" stroke="none"/><text x="-5" y="-38" fill="#c2cbd0" stroke="none" font-family="ui-monospace,monospace" font-size="13">C5</text></g>
+    <g id="cached-device-6" transform="translate(475 930)"><circle r="42"/><circle r="9" fill="#bbc3ca" stroke="none"/><text x="-5" y="-53" fill="#c2cbd0" stroke="none" font-family="ui-monospace,monospace" font-size="13">C6</text></g>
+    <g id="cached-device-branch-a" transform="translate(210 500)"><circle r="20"/><circle r="5" fill="#bbc3ca" stroke="none"/><text x="-10" y="-28" fill="#c2cbd0" stroke="none" font-family="ui-monospace,monospace" font-size="11">C7</text></g>
+    <g id="cached-device-branch-b" transform="translate(420 230)"><circle r="31"/><circle r="7" fill="#bbc3ca" stroke="none"/><text x="-10" y="-40" fill="#c2cbd0" stroke="none" font-family="ui-monospace,monospace" font-size="11">C8</text></g>
+    <g id="cached-device-branch-c" transform="translate(665 560)"><circle r="24"/><circle r="5" fill="#bbc3ca" stroke="none"/><text x="-10" y="-32" fill="#c2cbd0" stroke="none" font-family="ui-monospace,monospace" font-size="11">C9</text></g>
+    <g id="cached-device-branch-d" transform="translate(625 700)"><circle r="18"/><circle r="4" fill="#bbc3ca" stroke="none"/><text x="-10" y="-26" fill="#c2cbd0" stroke="none" font-family="ui-monospace,monospace" font-size="11">C10</text></g>
+    <g id="cached-device-branch-e" transform="translate(285 820)"><circle r="26"/><circle r="6" fill="#bbc3ca" stroke="none"/><text x="-12" y="-35" fill="#c2cbd0" stroke="none" font-family="ui-monospace,monospace" font-size="11">C11</text></g>
+    <g id="cached-device-branch-f" transform="translate(320 1030)"><circle r="22"/><circle r="5" fill="#bbc3ca" stroke="none"/><text x="-12" y="-30" fill="#c2cbd0" stroke="none" font-family="ui-monospace,monospace" font-size="11">C12</text></g>
+  </g>
+
+  <!-- Secondary active device -->
+  <g id="secondary-active-device" transform="translate(550 1030)" filter="url(#player-glow)">
+    <circle r="66" fill="#2bd9cf" fill-opacity="0.14" stroke="#4df6e7" stroke-width="5"/>
+    <circle r="45" fill="#123b49" stroke="#83fff2" stroke-width="4"/>
+    <circle r="27" fill="#28bcb7" fill-opacity="0.82"/>
+    <circle r="9" fill="#c9fffb"/>
+  </g>
+
+  <!-- Secondary device's three connections -->
+  <g id="secondary-connections" fill="none" stroke-linecap="round">
+    <!-- Node 1: strong, route endpoint -->
+    <path id="secondary-node-1-connection" d="M550 1030 C525 1000 500 970 475 930" stroke="#5feade" stroke-width="11"/>
+    <!-- Node 2: strong, monitored and locked -->
+    <path id="secondary-node-2-connection" d="M550 1030 C620 1060 660 1095 690 1150" stroke="#9a60bd" stroke-width="12"/>
+    <!-- Node 3: weak -->
+    <path id="secondary-node-3-connection" d="M550 1030 C520 1110 480 1170 430 1210" stroke="#78909f" stroke-width="4"/>
+  </g>
+
+  <!-- Security and monitoring markers -->
+  <g id="connection-status-markers" font-family="ui-monospace,monospace" font-weight="600" text-anchor="middle">
+    <!-- Red locks -->
+    <g id="lock-primary-node-1" transform="translate(83 112)">
+      <rect x="-12" y="-5" width="24" height="18" rx="3" fill="#8f3449" stroke="#ff6b78" stroke-width="2"/>
+      <path d="M-7 -5 V-12 A7 7 0 0 1 7 -12 V-5" fill="none" stroke="#ff6b78" stroke-width="3"/>
+    </g>
+    <g id="lock-primary-node-2" transform="translate(300 96)">
+      <rect x="-12" y="-5" width="24" height="18" rx="3" fill="#8f3449" stroke="#ff6b78" stroke-width="2"/>
+      <path d="M-7 -5 V-12 A7 7 0 0 1 7 -12 V-5" fill="none" stroke="#ff6b78" stroke-width="3"/>
+    </g>
+    <g id="lock-secondary-node-2" transform="translate(660 1110)">
+      <rect x="-12" y="-5" width="24" height="18" rx="3" fill="#8f3449" stroke="#ff6b78" stroke-width="2"/>
+      <path d="M-7 -5 V-12 A7 7 0 0 1 7 -12 V-5" fill="none" stroke="#ff6b78" stroke-width="3"/>
+    </g>
+    <!-- Purple monitored markers -->
+    <g id="monitor-primary-node-4" transform="translate(82 430)"><circle r="14" fill="#7d3d9c" stroke="#d38bff" stroke-width="2"/><text y="6" fill="#fff0ff" font-size="17">!</text></g>
+    <g id="monitor-secondary-node-2" transform="translate(638 1090)"><circle r="14" fill="#7d3d9c" stroke="#d38bff" stroke-width="2"/><text y="6" fill="#fff0ff" font-size="17">!</text></g>
+  </g>
+
+  <!-- Scan labels, no separate legend -->
+  <g id="scan-labels" font-family="ui-monospace,monospace" fill="#d7f7f5" font-size="14">
+    <text x="142" y="325" text-anchor="middle">PRIMARY DEVICE</text>
+    <text x="142" y="345" text-anchor="middle" fill="#9bd0cf">4 CONNECTIONS</text>
+    <text x="550" y="1130" text-anchor="middle">SECONDARY DEVICE</text>
+    <text x="550" y="1150" text-anchor="middle" fill="#9bd0cf">3 CONNECTIONS</text>
+    <text x="36" y="52" font-size="15" fill="#7fe1db">NETWORK SCAN // CACHED ROUTE</text>
+    <text x="36" y="78" font-size="13" opacity="0.72">PRIMARY NODE 3 → SECONDARY NODE 1</text>
+    <text x="36" y="1232" font-size="13" opacity="0.7">12 CACHED DEVICES  ·  SAFE ROUTE FOUND</text>
+  </g>
+</svg>
