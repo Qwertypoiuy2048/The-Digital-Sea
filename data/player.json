@@ -12,8 +12,10 @@
       "connectionSecurity": true
     }
   },
-  "activeDevices": [
-    "001"
-  ],
-  "compute": 10
+  "activeNodes": {
+    "primary": "001",
+    "secondary" : [
+      "112"
+    ]
+  }
 }

@@ -55,56 +55,64 @@
       "to": "002",
       "bandwidth": "weak",
       "stability": "unstable",
-      "security": "open"
+      "security": "open",
+      "monitored": false
     },
     {
       "from": "002",
       "to": "112",
       "bandwidth": "strong",
       "stability": "stable",
-      "security": "unknown"
+      "security": "unknown",
+      "monitored": false
     },
     {
       "from": "001",
       "to": "003",
       "bandwidth": "strong",
       "stability": "stable",
-      "security": "encrypted"
+      "security": "encrypted",
+      "monitored": false
     },
     {
       "from": "003",
       "to": "004",
       "bandwidth": "strong",
       "stability": "unstable",
-      "security": "encrypted"
+      "security": "encrypted",
+      "monitored": false
     },
     {
       "from": "001",
       "to": "005",
       "bandwidth": "weak",
       "stability": "stable",
-      "security": "open"
+      "security": "open",
+      "monitored": false
     },
     {
       "from": "005",
       "to": "006",
       "bandwidth": "medium",
       "stability": "unstable",
-      "security": "open"
+      "security": "open",
+      "monitored": false
     },
     {
       "from": "003",
       "to": "007",
       "bandwidth": "strong",
       "stability": "stable",
-      "security": "open"
+      "security": "open",
+      "monitored": false
     },
     {
       "from": "007",
       "to": "004",
       "bandwidth": "strong",
       "stability": "stable",
-      "security": "encrypted"
+      "security": "encrypted",
+      "monitored": false
     }
   ]
 }
