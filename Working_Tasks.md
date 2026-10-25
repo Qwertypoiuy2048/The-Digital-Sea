@@ -1,4 +1,4 @@
-The first milestone should be:
+The first network screen milestone:
 1. Open a fullscreen or resizable Pygame window.
 2. Draw the network background.
 3. Draw active and cached devices from data.
@@ -7,3 +7,6 @@ The first milestone should be:
 6. Zoom with the mouse wheel.
 7. Click a node or connection to inspect it.
 8. Display the selected object’s known information.
+
+The first Code screen milestone:
+
