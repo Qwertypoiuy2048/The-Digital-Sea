@@ -4,6 +4,7 @@ import pygame
 
 import constants
 from data_loader import load_json
+from code_screen import CodeScreen
 from network_screen import NetworkScreen
 from screen_manager import ScreenManager
 
@@ -15,12 +16,15 @@ def main():
     clock = pygame.time.Clock()
     state = {
         "player": load_json("player.json"),
+        "module_catalog": load_json("modules.json"),
+        "cached_modules": load_json("cached_modules.json"),
         "network_cache": load_json("network_cache.json"),
     }
     screens = {
         "network": NetworkScreen(state),
+        "code": CodeScreen(state),
     }
-    screen_manager = ScreenManager(screens, "network")
+    screen_manager = ScreenManager(screens, "code")
 
     running = True
     while running:

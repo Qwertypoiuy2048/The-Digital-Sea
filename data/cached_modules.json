@@ -1,0 +1,9 @@
+{
+    "modules": [
+        "scan"
+    ],
+    "extensions": [
+        "security-scan",
+        "passive-scan"
+    ]
+}

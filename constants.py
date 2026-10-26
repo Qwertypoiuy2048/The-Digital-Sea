@@ -2,7 +2,6 @@
 
 # Window settings
 WINDOW_SIZE = (1000, 800)
-WINDOW_TITLE = "The Digital Sea - Network Screen"
 FRAME_RATE = 60
 
 # Camera settings
@@ -56,6 +55,18 @@ TEXT_COLOR = (184, 217, 216)  # #b8d9d8
 MUTED_TEXT_COLOR = (133, 158, 169)
 PANEL_COLOR = (8, 29, 43, 235)
 
+# Code screen palette, kept separate from network-specific colors.
+CODE_PANEL_COLOR = (16, 32, 45, 245)
+CODE_PANEL_BORDER = (53, 97, 109)
+CODE_HEADER = (35, 83, 91)
+CODE_ITEM_COLOR = (20, 48, 58)
+CODE_TEAL = (82, 225, 209)
+CODE_BLUE = (95, 184, 255)
+CODE_PURPLE = (183, 125, 224)
+CODE_AMBER = (227, 160, 97)
+CODE_MUTED = (118, 158, 165)
+CODE_DISABLED = (75, 91, 98)
+
 # Node sizes in world-space pixels.
 NODE_RADII = {
     "small": 25,
@@ -75,3 +86,12 @@ LOCK_MARKER_SIZE = 9
 def node_radius(size: str) -> float:
     """Return the world-space radius for a node size label."""
     return NODE_RADII.get(size, 30)
+
+
+# Temporary Constants
+WINDOW_TITLE = "The Digital Sea - Code Screen"
+DEFAULT_DEVICE_RESOURCES = {
+    "compute": 16,
+    "memory": 64,
+    "cores": 1,
+}

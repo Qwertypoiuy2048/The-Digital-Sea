@@ -1,0 +1,49 @@
+{
+    "modules": {
+        "scan": {
+            "name": "Scan",
+            "necessaryExtensions": [
+                "scanType"
+            ],
+            "optionalExtensions": [
+                "scanType"
+            ],
+            "description":"Basic scan showing nearby connections and nodes",
+            "lowCompute": 4,
+            "mediumCompute": 8,
+            "highCompute": 16,
+            "distance": 1,
+            "details": ["size", "monitored", "bandwidth", "stability"],
+            "replicable": false,
+            "cooldown": 20,
+            "automatic": false,
+            "compileTime": 5,
+            "size":12
+        }
+    },
+    "extensions": {
+        "security-scan": {
+            "name": "Security Scan",
+            "type": "scanType",
+            "description": "Adds ability to detect Secured connections",
+            "computeCost": 4,
+            "compileTime": 2,
+            "effects": {
+                "details": "security"
+            },
+            "size": 8
+        },
+        "passive-scan": {
+            "name": "Passive Scan",
+            "type": "scanType",
+            "description": "Makes scanning significantly faster and automatic",
+            "computeCost": 2,
+            "compileTime": 2,
+            "effects": {
+                "cooldown": 5,
+                "automatic": true
+            },
+            "size": 8
+        }
+    }
+}

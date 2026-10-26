@@ -12,6 +12,19 @@
       "connectionSecurity": true
     }
   },
+  "program": {
+    "modules": {
+        "scan":8
+  },
+    "activeExtensions": {
+      "scan": ["security-scan"]
+    },
+    "compile": {
+      "state": "finished", 
+      "progress": 100,
+      "remainingSeconds": 0
+    }
+  },
   "activeNodes": {
     "primary": "001",
     "secondary" : [
