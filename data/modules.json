@@ -19,17 +19,87 @@
             "automatic": false,
             "compileTime": 5,
             "size":12
+        },
+        "data-harvester": {
+            "name": "Data Harvester",
+            "necessaryExtensions": [],
+            "optionalExtensions": [
+                "dataType"
+            ],
+            "description": "Reads and copies accessible data blocks from connected targets.",
+            "lowCompute": 6,
+            "mediumCompute": 12,
+            "highCompute": 24,
+            "replicable": true,
+            "cooldown": 30,
+            "automatic": false,
+            "compileTime": 8,
+            "size": 16
+        },
+        "self-compiler": {
+            "name": "Self-Compiler",
+            "necessaryExtensions": [],
+            "optionalExtensions": [
+                "patchType"
+            ],
+            "description": "Allows the program to rewrite and modify sections of its own source code.",
+            "lowCompute": 8,
+            "mediumCompute": 16,
+            "highCompute": 32,
+            "replicable": false,
+            "cooldown": 60,
+            "automatic": false,
+            "compileTime": 15,
+            "size": 20
+        },
+        "kernel-threader": {
+            "name": "Kernel Threader",
+            "necessaryExtensions": [],
+            "optionalExtensions": [
+                "processType"
+            ],
+            "description": "Allocates system clock cycles to run simple system tasks.",
+            "lowCompute": 2,
+            "mediumCompute": 6,
+            "highCompute": 12,
+            "replicable": false,
+            "cooldown": 0,
+            "automatic": true,
+            "compileTime": 4,
+            "size": 8
+        },
+        "signal-disrupter": {
+            "name": "Signal Disrupter",
+            "necessaryExtensions": [
+                "combatType"
+            ],
+            "optionalExtensions": [
+                "combatType",
+                "stealthType"
+            ],
+            "description": "An aggressive utility designed to interface with and payload hostile programs.",
+            "lowCompute": 10,
+            "mediumCompute": 20,
+            "highCompute": 40,
+            "replicable": true,
+            "cooldown": 15,
+            "automatic": false,
+            "compileTime": 10,
+            "size": 18
         }
     },
     "extensions": {
         "security-scan": {
             "name": "Security Scan",
             "type": "scanType",
-            "description": "Adds ability to detect Secured connections",
+            "description": "Identifies precise connection types and flags secured connections.",
             "computeCost": 4,
             "compileTime": 2,
             "effects": {
-                "details": "security"
+                "details": [
+                    "securityType",
+                    "firewallPresence"
+                ]
             },
             "size": 8
         },
@@ -37,13 +107,103 @@
             "name": "Passive Scan",
             "type": "scanType",
             "description": "Makes scanning significantly faster and automatic",
-            "computeCost": 2,
+            "computeCost": 4,
             "compileTime": 2,
             "effects": {
-                "cooldown": 5,
+                "cooldown": -15,
                 "automatic": true
             },
             "size": 8
+        },
+        "broadband-receiver": {
+            "name": "Broadband Receiver",
+            "type": "scanType",
+            "description": "Expands scanning pulse distance across more network hops.",
+            "computeCost": 6,
+            "compileTime": 3,
+            "effects": {
+                "distance": 2
+            },
+            "size": 10
+        },
+        "turbo-buffer": {
+            "name": "Turbo Buffer",
+            "type": "dataType",
+            "description": "Optimizes file intake streams to copy information much faster.",
+            "computeCost": 3,
+            "compileTime": 2,
+            "effects": {
+                "cooldown": -10
+            },
+            "size": 6
+        },
+        "huffman-compressor": {
+            "name": "Huffman Compressor",
+            "type": "dataType",
+            "description": "Squeezes processed data payloads to minimize total module memory allocation.",
+            "computeCost": 2,
+            "compileTime": 4,
+            "effects": {
+                "size": -4
+            },
+            "size": 4
+        },
+        "packet-shrouder": {
+            "name": "Packet Shrouder",
+            "type": "dataType",
+            "description": "Temporarily masks outbound text and data routing signatures.",
+            "computeCost": 5,
+            "compileTime": 3,
+            "effects": {
+                "details": [
+                    "shroudedTransfer"
+                ]
+            },
+            "size": 8
+        },
+        "defrag-patch": {
+            "name": "Defrag Patch",
+            "type": "patchType",
+            "description": "Actively restructures bad runtime code blocks to eliminate corruption errors.",
+            "computeCost": 4,
+            "compileTime": 5,
+            "effects": {
+                "cooldown": -15
+            },
+            "size": 6
+        },
+        "dual-thread-schedule": {
+            "name": "Dual-Thread Scheduler",
+            "type": "processType",
+            "description": "Splits threading queues allowing a second simple background process to spin up.",
+            "computeCost": 6,
+            "compileTime": 6,
+            "effects": {
+                "cores": 1
+            },
+            "size": 12
+        },
+        "rootkit-veil": {
+            "name": "Rootkit Veil",
+            "type": "stealthType",
+            "description": "Camouflages the program signature, dropping passive discovery footprints.",
+            "computeCost": 5,
+            "compileTime": 4,
+            "effects": {
+                "automatic": true
+            },
+            "size": 10
+        },
+        "firewall-daemon": {
+            "name": "Firewall Daemon",
+            "type": "combatType",
+            "description": "Deploys standard protection walls to stop incoming data damage vectors.",
+            "computeCost": 6,
+            "compileTime": 5,
+            "effects": {
+                "highCompute": -10
+            },
+            "size": 14
         }
     }
 }

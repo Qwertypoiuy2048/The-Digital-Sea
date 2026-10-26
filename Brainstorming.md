@@ -327,7 +327,7 @@ Admin patrols should communicate danger through system-level changes before dire
 - Warnings about unusual activity
 - A patrol route gradually converging on the player
 
-- The Admin's color theme is purple
+- The Admin's color theme is purple, It and related objects should be the only things with purple coloring
 
 The player should understand that attention is accumulating before the Admin arrives. This makes stealth and restraint readable without requiring a large tutorial explanation.
 

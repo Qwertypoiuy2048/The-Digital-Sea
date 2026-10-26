@@ -7,6 +7,3 @@ The first network screen milestone:
 6. Zoom with the mouse wheel.
 7. Click a node or connection to inspect it.
 8. Display the selected object’s known information.
-
-The first Code screen milestone:
-

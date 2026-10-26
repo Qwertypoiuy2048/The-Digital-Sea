@@ -1,9 +1,17 @@
 {
     "modules": [
-        "scan"
+        "scan",
+        "data-harvester",
+        "self-compiler",
+        "kernel-threader",
+        "signal-disrupter"
     ],
     "extensions": [
         "security-scan",
-        "passive-scan"
+        "passive-scan",
+        "broadband-receiver",
+        "defrag-patch",
+        "dual-thread-schedule",
+        "firewall-daemon"
     ]
 }
