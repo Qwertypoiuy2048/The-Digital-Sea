@@ -91,7 +91,7 @@ def node_radius(size: str) -> float:
 # Temporary Constants
 WINDOW_TITLE = "The Digital Sea - Code Screen"
 DEFAULT_DEVICE_RESOURCES = {
-    "compute": 16,
+    "compute": 128,
     "memory": 64,
     "cores": 1,
 }

@@ -14,10 +14,14 @@
   },
   "program": {
     "modules": {
-        "scan":8
+        "scan":8,
+        "signal-disrupter":16,
+        "self-compiler":4
   },
     "activeExtensions": {
-      "scan": ["security-scan"]
+      "scan": ["security-scan","passive-scan",
+        "broadband-receiver"],
+        "signal-disrupter":["firewall-daemon","defrag-patch"]
     },
     "compile": {
       "state": "finished", 
