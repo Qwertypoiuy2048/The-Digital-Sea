@@ -64,6 +64,7 @@ CODE_TEAL = (82, 225, 209)
 CODE_BLUE = (95, 184, 255)
 CODE_PURPLE = (183, 125, 224)
 CODE_AMBER = (227, 160, 97)
+CODE_ERROR = (244, 88, 99)
 CODE_MUTED = (118, 158, 165)
 CODE_DISABLED = (75, 91, 98)
 
@@ -91,7 +92,7 @@ def node_radius(size: str) -> float:
 # Temporary Constants
 WINDOW_TITLE = "The Digital Sea - Code Screen"
 DEFAULT_DEVICE_RESOURCES = {
-    "compute": 128,
-    "memory": 64,
-    "cores": 1,
+    "compute": 256,
+    "memory": 128,
+    "cores": 2,
 }

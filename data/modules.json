@@ -43,9 +43,9 @@
                 "patchType"
             ],
             "description": "Allows the program to rewrite and modify sections of its own source code.",
-            "lowCompute": 8,
-            "mediumCompute": 16,
-            "highCompute": 32,
+            "lowCompute": 4,
+            "mediumCompute": 8,
+            "highCompute": 16,
             "replicable": false,
             "cooldown": 60,
             "automatic": false,

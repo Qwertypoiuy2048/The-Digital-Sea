@@ -28,10 +28,21 @@ def build_program_runtime(player, module_catalog, resource_capacity=None, cached
     """Resolve active modules and calculate current usage without mutating saves."""
     program = player.get("program", {})
     active_modules = program.get("modules", {})
-    if not isinstance(active_modules, dict):
-        active_modules = {}
+    if isinstance(active_modules, list):
+        module_instances = [
+            module for module in active_modules if isinstance(module, dict)
+        ]
+    elif isinstance(active_modules, dict):
+        # Preserve compatibility with the earlier {"scan": 8} format.
+        module_instances = [
+            {"instanceId": module_id, "definitionId": module_id, "compute": allocation}
+            for module_id, allocation in active_modules.items()
+        ]
+    else:
+        module_instances = []
     configured_extensions = program.get("activeExtensions", [])
     if isinstance(configured_extensions, dict):
+        extensions_are_mapped = True
         extensions_by_module = {
             module_id: extension_ids
             for module_id, extension_ids in configured_extensions.items()
@@ -43,35 +54,43 @@ def build_program_runtime(player, module_catalog, resource_capacity=None, cached
             for extension_id in extension_ids
         ]
     elif isinstance(configured_extensions, list):
+        extensions_are_mapped = False
         extensions_by_module = {}
         active_extension_ids = configured_extensions
     else:
+        extensions_are_mapped = True
         extensions_by_module = {}
         active_extension_ids = []
 
     definitions = module_catalog.get("modules", {})
     extension_definitions = module_catalog.get("extensions", {})
     modules = []
-    assigned_extensions = set()
+    assigned_extensions = []
     compute_used = 0
     active_memory_used = 0
     warnings = []
     compile_state = program.get("compile", {}).get("state", "unknown")
 
-    for module_id, allocation_value in active_modules.items():
+    for module_instance in module_instances:
+        instance_id = module_instance.get("instanceId", module_instance.get("definitionId", "unknown"))
+        module_id = module_instance.get("definitionId", module_instance.get("id", instance_id))
         definition = definitions.get(module_id, {})
+        allocation_value = module_instance.get("compute", module_instance.get("allocation", 0))
         allocation = _as_number(allocation_value)
         required_types = definition.get("necessaryExtensions", [])
         optional_types = definition.get("optionalExtensions", [])
         compatible_types = set(required_types + optional_types)
-        candidate_extension_ids = extensions_by_module.get(module_id, active_extension_ids)
+        candidate_extension_ids = (
+            extensions_by_module.get(instance_id, [])
+            if extensions_are_mapped else active_extension_ids
+        )
         attached = []
         for extension_id in candidate_extension_ids:
             extension_type = extension_definitions.get(extension_id, {}).get("type")
             if extension_type in compatible_types:
-                if extension_id not in assigned_extensions:
+                if extension_id not in attached:
                     attached.append(extension_id)
-                    assigned_extensions.add(extension_id)
+                    assigned_extensions.append(extension_id)
 
         missing_types = [
             extension_type for extension_type in required_types
@@ -99,6 +118,8 @@ def build_program_runtime(player, module_catalog, resource_capacity=None, cached
 
         modules.append({
             "id": module_id,
+            "instanceId": instance_id,
+            "definitionId": module_id,
             "name": definition.get("name", module_id.replace("-", " ").title()),
             "allocation": allocation,
             "frequency": _frequency(definition, allocation),
@@ -125,6 +146,10 @@ def build_program_runtime(player, module_catalog, resource_capacity=None, cached
         warnings.append(f"unattached extensions: {', '.join(unassigned_extensions)}")
 
     capacity = dict(resource_capacity or constants.DEFAULT_DEVICE_RESOURCES)
+    program_instance_count = 1 if active_modules else 0
+    configured_instances = program.get("instances")
+    if isinstance(configured_instances, list):
+        program_instance_count = len(configured_instances)
     cached_memory_used = 0
     cached_modules = cached_modules or {}
     for module_id in cached_modules.get("modules", []):
@@ -143,6 +168,11 @@ def build_program_runtime(player, module_catalog, resource_capacity=None, cached
             "used": cached_memory_used,
             "capacity": capacity.get("memory"),
             "available": capacity.get("memory", 0) - cached_memory_used,
+        },
+        "cores": {
+            "used": program_instance_count,
+            "capacity": capacity.get("cores"),
+            "available": capacity.get("cores", 0) - program_instance_count,
         },
         "activeMemory": active_memory_used,
         "capacity": capacity,

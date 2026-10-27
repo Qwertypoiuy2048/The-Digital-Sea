@@ -33,9 +33,10 @@ def screen_rects(surface_size):
 
 
 def telemetry_rects(surface_size):
-    """Return the three top telemetry cards."""
+    """Return the four top telemetry cards."""
     return [
-        scale_rect((20, 18, 420, 78), surface_size),
-        scale_rect((460, 18, 420, 78), surface_size),
-        scale_rect((900, 18, 520, 78), surface_size),
+        scale_rect((20, 18, 330, 78), surface_size),
+        scale_rect((370, 18, 330, 78), surface_size),
+        scale_rect((720, 18, 330, 78), surface_size),
+        scale_rect((1070, 18, 350, 78), surface_size),
     ]
