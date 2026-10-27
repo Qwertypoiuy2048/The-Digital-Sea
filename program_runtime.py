@@ -24,7 +24,7 @@ def _frequency(definition, allocation):
     return "below-minimum"
 
 
-def build_program_runtime(player, module_catalog, resource_capacity=None):
+def build_program_runtime(player, module_catalog, resource_capacity=None, cached_modules=None):
     """Resolve active modules and calculate current usage without mutating saves."""
     program = player.get("program", {})
     active_modules = program.get("modules", {})
@@ -54,7 +54,7 @@ def build_program_runtime(player, module_catalog, resource_capacity=None):
     modules = []
     assigned_extensions = set()
     compute_used = 0
-    memory_used = 0
+    active_memory_used = 0
     warnings = []
     compile_state = program.get("compile", {}).get("state", "unknown")
 
@@ -93,7 +93,7 @@ def build_program_runtime(player, module_catalog, resource_capacity=None):
             for extension_id in attached
             if extension_id in extension_definitions
         )
-        memory_used += module_size + extension_size
+        active_memory_used += module_size + extension_size
         if missing_types:
             warnings.append(f"{module_id} missing: {', '.join(missing_types)}")
 
@@ -125,6 +125,12 @@ def build_program_runtime(player, module_catalog, resource_capacity=None):
         warnings.append(f"unattached extensions: {', '.join(unassigned_extensions)}")
 
     capacity = dict(resource_capacity or constants.DEFAULT_DEVICE_RESOURCES)
+    cached_memory_used = 0
+    cached_modules = cached_modules or {}
+    for module_id in cached_modules.get("modules", []):
+        cached_memory_used += _as_number(definitions.get(module_id, {}).get("size"))
+    for extension_id in cached_modules.get("extensions", []):
+        cached_memory_used += _as_number(extension_definitions.get(extension_id, {}).get("size"))
     return {
         "modules": modules,
         "extensions": active_extension_ids,
@@ -134,10 +140,11 @@ def build_program_runtime(player, module_catalog, resource_capacity=None):
             "available": capacity.get("compute", 0) - compute_used,
         },
         "memory": {
-            "used": memory_used,
+            "used": cached_memory_used,
             "capacity": capacity.get("memory"),
-            "available": capacity.get("memory", 0) - memory_used,
+            "available": capacity.get("memory", 0) - cached_memory_used,
         },
+        "activeMemory": active_memory_used,
         "capacity": capacity,
         "compile": program.get("compile", {}),
         "warnings": warnings,

@@ -18,7 +18,8 @@ class CodeScreen(Screen):
         self.player = state["player"]
         self.module_catalog = state.get("module_catalog", {})
         self.cached_modules = state.get("cached_modules", {})
-        self.runtime = build_program_runtime(self.player, self.module_catalog)
+        self.runtime = build_program_runtime(self.player, self.module_catalog,
+                                             cached_modules=self.cached_modules)
         self.font = pygame.font.Font(None, 25)
         self.small_font = pygame.font.Font(None, 18)
         self.tiny_font = pygame.font.Font(None, 15)
@@ -182,17 +183,20 @@ class CodeScreen(Screen):
             module_rect = scale_rect((350, y, 360, module_height), surface.get_size())
             self.module_card(surface, module_rect, module)
             extension_x = 735
+            extension_height = 56
+            extension_lines = []
             for extension_id in module["extensions"]:
                 extension_name = self.module_catalog.get("extensions", {}).get(extension_id, {}).get(
                     "name", extension_id)
-                extension_lines = self.wrapped_lines(extension_name.upper(), self.tiny_font, 225)
-                extension_height = max(56, 24 + len(extension_lines) * self.tiny_font.get_height() + 18)
+                extension_lines.append((extension_id, self.wrapped_lines(extension_name.upper(), self.tiny_font, 225)))
+            if extension_lines:
+                extension_height = max(56, 24 + sum(max(1, len(lines)) for _, lines in extension_lines)
+                                       * self.tiny_font.get_height() + 18)
                 extension_rect = scale_rect((extension_x, y + 18, 255, extension_height), surface.get_size())
                 pygame.draw.line(surface, constants.CODE_PURPLE,
                                  (module_rect.right, extension_rect.centery),
                                  (extension_rect.left, extension_rect.centery), 2)
-                self.extension_piece(surface, extension_rect, extension_id)
-                extension_x += 270
+                self.extension_box(surface, extension_rect, extension_lines)
             y += max(module_height, extension_height if module["extensions"] else 0) + 25
 
         drop = scale_rect((350, 590, 640, 40), surface.get_size())
@@ -218,16 +222,21 @@ class CodeScreen(Screen):
         surface.blit(self.render(detail, self.tiny_font, constants.CODE_BLUE),
                      (rect.x + 18, rect.bottom - 18))
 
-    def extension_piece(self, surface, rect, extension_id):
-        definition = self.module_catalog.get("extensions", {}).get(extension_id, {})
+    def extension_box(self, surface, rect, extension_lines):
         pygame.draw.rect(surface, constants.CODE_ITEM_COLOR, rect, border_radius=8)
         pygame.draw.rect(surface, constants.CODE_PURPLE, rect, width=2, border_radius=8)
         pygame.draw.circle(surface, constants.CODE_PURPLE, (rect.left, rect.centery), 7)
-        self.draw_wrapped(surface, definition.get("name", extension_id).upper(), self.tiny_font,
-                          constants.CODE_PURPLE,
-                          pygame.Rect(rect.x + 15, rect.y + 7, rect.width - 30, rect.height - 25))
-        surface.blit(self.render(f"COMPUTE  {definition.get('computeCost', 0)} CU",
-                                 self.tiny_font, constants.CODE_MUTED), (rect.x + 15, rect.bottom - 18))
+        y = rect.y + 8
+        for extension_id, lines in extension_lines:
+            definition = self.module_catalog.get("extensions", {}).get(extension_id, {})
+            self.draw_wrapped(surface, "  " + " ".join(lines), self.tiny_font,
+                              constants.CODE_PURPLE,
+                              pygame.Rect(rect.x + 15, y, rect.width - 30, rect.height - 18),
+                              max_lines=len(lines))
+            cost = self.render(f"COMPUTE  {definition.get('computeCost', 0)} CU",
+                               self.tiny_font, constants.CODE_MUTED)
+            surface.blit(cost, (rect.right - cost.get_width() - 14, y))
+            y += max(1, len(lines)) * self.tiny_font.get_height() + 4
 
     def draw_state(self, surface, rect):
         self.panel(surface, rect)
