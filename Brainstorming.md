@@ -101,9 +101,9 @@ Different CPU generations can have distinct strengths and weaknesses:
 - Specialized processors: excellent at one task but weak outside it
 - Damaged processors: unreliable, unstable, or prone to unexpected behavior
 
-### Memory — active thought and temporary state
+### Memory — Cached information that stays with the program
 
-Memory can determine how much information the player can actively process. It might affect multitasking, reaction speed, map awareness, ability complexity, and how many entities the player can control simultaneously.
+Memory determines how much information the player can actively keep with them. It affects map awareness, information complexity, and how much temporary and backup information and abilities the player can keep with them for quick access.
 
 ### Bandwidth — movement and communication
 
@@ -126,11 +126,10 @@ The player should not simply become better in every direction. Each evolution sh
 
 The player begins as a basic program with:
 
-- A small server or limited storage space
-- A simple processor with very few cores
-- Basic memory and bandwidth
+- A small server with Basic memory and bandwidth
+- A simple processor with a single core
 - A narrow set of functions
-- Little influence over nearby programs
+- No influence over nearby programs
 - Limited ability to survive without a stable host or shelter
 
 The starting program should be useful enough to make decisions immediately, but incomplete enough that every improvement feels meaningful.
@@ -139,18 +138,7 @@ The starting program should be useful enough to make decisions immediately, but 
 
 The player acquires compute through exploration, territory, hardware access, cooperation, or conflict. Compute is then spent deliberately on evolution.
 
-Possible uses include:
-
-- Increasing processing speed
-- Adding or improving functions
-- Expanding memory or storage access
-- Creating sub-processes
-- Improving defenses
-- Increasing replication capacity
-- Repairing corruption
-- Modifying how the program interacts with other entities
-
-The central strategic tension is that compute spent on permanent evolution cannot also be used for immediate actions. A player may need to choose between becoming stronger, escaping danger, maintaining territory, or creating another process.
+Compute is the biggest driving factor for what a program can do
 
 ## Program ecology
 
@@ -181,7 +169,7 @@ This creates an important distinction between being powerful and being conspicuo
 
 ## Opening state: a program trapped on one device
 
-The game begins on a single physical device. The player has access only to the device's local storage, processor, memory, and nearby connections.
+The game begins on a single physical device. The player has access only to the device's local processor, memory, and nearby connections.
 
 The starting program can:
 
@@ -220,7 +208,8 @@ The player should often find interesting code before they have the storage, comp
 
 ## Self-modification
 
-The player modifies parts of its own code to gain abilities. Early modifications should be small and understandable, such as:
+The player modifies parts of its own code to gain abilities. 
+Early modifications should be small and understandable, such as:
 
 - Improving scan range
 - Identifying connection types
@@ -230,7 +219,30 @@ The player modifies parts of its own code to gain abilities. Early modifications
 - Repairing minor corruption
 - Managing a second simple process
 
-More powerful modifications should require compatible code, additional storage, more compute, or a suitable processor. Modifying the wrong section could cause bugs, instability, increased resource use, or unwanted behavior.
+More powerful modifications should require compatible code, additional storage, more compute, or a suitable processor. 
+<!-- Modifying the wrong section could cause bugs, instability, increased resource use, or unwanted behavior. -->
+
+Modifications come in two varieties:
+
+### Modules
+
+Modules dictate **What** a program can do. Ex.
+ - Scan nearby connections and nodes
+ - Transfer data
+ - Repair corruption
+ - Create subprocesses
+ - Edit their code
+ - Attack nearby programs
+ - Defend against attacks
+
+### Extensions
+
+Extensions dictate **How** Modules function
+ - Adding data to a scan
+ - Encrypting data transmissions
+ - Automating a task
+ - Making a Module cheaper
+ - Making a Module work faster 
 
 ## Discovery loop
 
@@ -280,9 +292,7 @@ The player should understand: “I am here, these things are nearby, and I can i
 Show the player’s code as a small functional structure rather than a wall of text. Each function can be represented by a node or module with:
 
 - What it does
-- What resources it consumes
-- What it connects to
-- What can be safely changed
+- How much resources it consumes
 - What is currently unknown
 
 Early modifications should visibly change the scan results, available actions, or movement options. The player learns by seeing direct cause and effect.
@@ -293,18 +303,7 @@ Use layered visibility. A connection might initially appear as a faint line with
 
 This communicates progression through the world itself instead of through an abstract level number.
 
-### Stage 4: choosing a presence
-
-When the player reaches a new device, present the decision as a clear physical choice:
-
-- **Transfer:** Move the active instance and abandon the origin.
-- **Copy:** Leave an active process behind.
-- **Seed:** Leave dormant scrap data or a backup.
-- **Reach:** Stay rooted and operate through the connection.
-
-Each choice should alter the network map immediately so the player can see what remains alive, what is dormant, and what is only connected remotely.
-
-### Stage 5: understanding other programs
+### Stage 4: understanding other programs
 
 Programs should be communicated first through behavior and only later through labels. A swarm should be recognizable from its movement pattern before it is identified as a swarm. A maintenance routine should reveal its purpose by repeatedly repairing or deleting things.
 
@@ -317,7 +316,7 @@ As the player improves analysis, unknown entities can become more specifically d
 
 This allows the player’s growing understanding to feel like an actual ability.
 
-### Stage 6: Admin attention
+### Stage 5: Admin attention
 
 Admin patrols should communicate danger through system-level changes before direct combat:
 
@@ -326,7 +325,6 @@ Admin patrols should communicate danger through system-level changes before dire
 - Other programs hiding or going dormant
 - Warnings about unusual activity
 - A patrol route gradually converging on the player
-
 - The Admin's color theme is purple, It and related objects should be the only things with purple coloring
 
 The player should understand that attention is accumulating before the Admin arrives. This makes stealth and restraint readable without requiring a large tutorial explanation.
@@ -366,7 +364,7 @@ Movement should either be absent or extremely limited. The player is making deli
 - Connection lines with clear states: open, blocked, unknown, monitored
 - Data and code shown as layered packets, fragments, or readable structures
 - A compact function map showing the player’s active modules
-- Explicit resource feedback for storage, memory, cores, bandwidth, and compute
+- Explicit resource feedback for memory, cores, and compute
 - Strong confirmation when a modification changes what the player can access
 
 The emotional experience should be curiosity, confinement, and careful experimentation.
@@ -423,7 +421,7 @@ The early game is mostly Code view and a small Network view. The midgame is most
 - Storage can appear as mass, volume, or layered internal chambers.
 - A copy can have a stable glow and a distinct process signature.
 - Scrap data can appear faint, buried, fragmented, or intermittent.
-- Admin scanning can flatten colors, interrupt signals, or create a sweeping system-wide pulse.
+- Admin scanning can flatten colors, cast a purple hue, interrupt signals, or create a sweeping system-wide pulse.
 
 The visual language should make technical state readable without requiring the player to constantly inspect numerical statistics.
 
