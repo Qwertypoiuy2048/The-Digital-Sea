@@ -31,8 +31,20 @@ def distance_to_segment(point, start, end) -> float:
 class NetworkScreen(Screen):
     def __init__(self, state: dict):
         self.state = state
-        self.player = state["player"]
-        cache = state["network_cache"]
+        self.camera = pygame.Vector2(constants.STARTING_CAMERA)
+        self.zoom = constants.STARTING_ZOOM
+        self.dragging = False
+        self.last_mouse = pygame.Vector2(0, 0)
+        self.selected = None
+        self.surface_size = constants.WINDOW_SIZE
+        self.font = pygame.font.Font(None, 24)
+        self.small_font = pygame.font.Font(None, 19)
+        self._load_network_data()
+
+    def _load_network_data(self):
+        """Rebuild network data derived from the shared application state."""
+        self.player = self.state["player"]
+        cache = self.state["network_cache"]
         self.nodes = {node["id"]: node for node in cache["nodes"]}
         self.connections = cache["connections"]
         active_nodes = self.player.get("activeNodes", {})
@@ -48,14 +60,10 @@ class NetworkScreen(Screen):
         self.monitored_nodes = {
             node["id"] for node in cache["nodes"] if node.get("monitored", False)
         }
-        self.camera = pygame.Vector2(constants.STARTING_CAMERA)
-        self.zoom = constants.STARTING_ZOOM
-        self.dragging = False
-        self.last_mouse = pygame.Vector2(0, 0)
-        self.selected = None
-        self.surface_size = constants.WINDOW_SIZE
-        self.font = pygame.font.Font(None, 24)
-        self.small_font = pygame.font.Font(None, 19)
+
+    def refresh(self):
+        """Reload network data from shared state without changing view controls."""
+        self._load_network_data()
 
     def world_to_screen(self, position):
         return pygame.Vector2(position) * self.zoom + self.camera

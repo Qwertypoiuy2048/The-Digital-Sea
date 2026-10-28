@@ -16,3 +16,8 @@ def load_json(filename: str) -> dict:
 def update_player_data(player: dict) -> None:
     """Persistence hook for player edits; implementation will be added later."""
     pass
+
+
+def update_network_cach(network_cache: dict) -> None:
+    """Persistence hook for network-cache edits; implementation will be added later."""
+    pass
