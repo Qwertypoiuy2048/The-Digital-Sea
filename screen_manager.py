@@ -16,7 +16,9 @@ class ScreenManager:
         self.active_screen_name = screen_name
 
     def handle_event(self, event):
-        self.active_screen.handle_event(event)
+        requested_screen = self.active_screen.handle_event(event)
+        if requested_screen is not None:
+            self.set_screen(requested_screen)
 
     def draw(self, surface):
         self.active_screen.draw(surface)

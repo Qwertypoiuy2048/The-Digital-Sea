@@ -53,6 +53,7 @@ class NetworkScreen(Screen):
         self.dragging = False
         self.last_mouse = pygame.Vector2(0, 0)
         self.selected = None
+        self.surface_size = constants.WINDOW_SIZE
         self.font = pygame.font.Font(None, 24)
         self.small_font = pygame.font.Font(None, 19)
 
@@ -63,6 +64,9 @@ class NetworkScreen(Screen):
         return (pygame.Vector2(position) - self.camera) / self.zoom
 
     def handle_event(self, event):
+        if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+            if self.navigation_rect.collidepoint(event.pos):
+                return "code"
         if event.type == pygame.MOUSEBUTTONDOWN:
             if event.button in (2, 3):
                 self.dragging = True
@@ -103,6 +107,7 @@ class NetworkScreen(Screen):
         self.selected = ("connection", closest) if closest is not None else None
 
     def draw(self, surface):
+        self.surface_size = surface.get_size()
         self.draw_background(surface)
         for index, connection in enumerate(self.connections):
             self.draw_connection(surface, connection, index)
@@ -111,6 +116,20 @@ class NetworkScreen(Screen):
         self.draw_help(surface)
         if self.selected:
             self.draw_readout(surface)
+        self.draw_navigation(surface)
+
+    @property
+    def navigation_rect(self):
+        """Return the Network screen's route button rectangle."""
+        return pygame.Rect(self.surface_size[0] - 178, self.surface_size[1] - 52, 160, 34)
+
+    def draw_navigation(self, surface):
+        rect = self.navigation_rect
+        pygame.draw.rect(surface, constants.PANEL_COLOR, rect, border_radius=6)
+        pygame.draw.rect(surface, constants.CURRENT_COLOR, rect, width=1, border_radius=6)
+        label = self.small_font.render("CODE SCREEN", True, constants.CURRENT_COLOR)
+        surface.blit(label, (rect.centerx - label.get_width() // 2,
+                             rect.centery - label.get_height() // 2))
 
     def draw_background(self, surface):
         draw_background(surface)

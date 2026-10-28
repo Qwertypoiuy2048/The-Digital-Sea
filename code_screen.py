@@ -57,6 +57,9 @@ class CodeScreen(Screen):
         self.extension_target_rects = {}
 
     def handle_event(self, event):
+        if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+            if self.navigation_rect.collidepoint(event.pos):
+                return "network"
         if event.type == pygame.MOUSEMOTION:
             self.mouse_position = event.pos
         if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
@@ -164,6 +167,20 @@ class CodeScreen(Screen):
         self.draw_module_menu(surface, rects["workspace"])
         self.draw_add_module_menu(surface, rects["library"])
         self.draw_sidebar_extension_menu(surface, rects["library"])
+        self.draw_navigation(surface)
+
+    @property
+    def navigation_rect(self):
+        """Return the Code screen's route button rectangle."""
+        return pygame.Rect(self.surface_size[0] - 178, self.surface_size[1] - 54, 160, 34)
+
+    def draw_navigation(self, surface):
+        rect = self.navigation_rect
+        pygame.draw.rect(surface, constants.CODE_ITEM_COLOR, rect, border_radius=6)
+        pygame.draw.rect(surface, constants.CODE_TEAL, rect, width=1, border_radius=6)
+        label = self.render("NETWORK MAP", self.tiny_font, constants.CODE_TEAL)
+        surface.blit(label, (rect.centerx - label.get_width() // 2,
+                             rect.centery - label.get_height() // 2))
 
     def clamp_scroll(self, region, viewport):
         maximum = max(0, self.content_heights[region] - viewport.height)
