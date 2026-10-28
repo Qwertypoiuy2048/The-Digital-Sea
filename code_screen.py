@@ -1,4 +1,4 @@
-"""Read-only Code screen driven by the loaded player and module data."""
+"""Interactive Code screen driven by the loaded player and module data."""
 
 from __future__ import annotations
 
@@ -56,12 +56,35 @@ class CodeScreen(Screen):
         self.extension_add_mode = False
         self.extension_target_rects = {}
 
+    def close_menus(self):
+        """Close every contextual menu and clear its transient hitboxes."""
+        self.selected_module_id = None
+        self.selected_library_module_id = None
+        self.selected_sidebar_extension_id = None
+        self.extension_removal_mode = False
+        self.extension_add_mode = False
+        self.module_menu_rect = None
+        self.add_module_menu_rect = None
+        self.add_module_button_rect = None
+        self.sidebar_extension_menu_rect = None
+        self.module_action_rects = {}
+        self.extension_removal_rects = {}
+        self.extension_add_rects = {}
+        self.extension_target_rects = {}
+
+    def is_hovered(self, rect):
+        """Return whether the current pointer is inside a visible control."""
+        return rect is not None and rect.collidepoint(self.mouse_position)
+
     def handle_event(self, event):
         if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
             if self.navigation_rect.collidepoint(event.pos):
                 return "network"
         if event.type == pygame.MOUSEMOTION:
             self.mouse_position = event.pos
+        if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
+            self.close_menus()
+            return None
         if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
             if self.add_module_button_rect is not None and self.add_module_button_rect.collidepoint(event.pos):
                 self.add_selected_library_module()
@@ -109,36 +132,41 @@ class CodeScreen(Screen):
                     None,
                 )
                 if clicked_module:
-                    self.selected_module_id = clicked_module
-                    self.extension_removal_mode = False
-                    self.extension_add_mode = False
+                    if self.selected_module_id == clicked_module:
+                        self.close_menus()
+                    else:
+                        self.selected_module_id = clicked_module
+                        self.extension_removal_mode = False
+                        self.extension_add_mode = False
                 else:
                     clicked_library_module = next(
                         (definition_id for definition_id, rect in self.library_module_hitboxes.items()
                          if rect.collidepoint(event.pos)), None
                     )
                     if clicked_library_module is not None:
-                        self.selected_library_module_id = clicked_library_module
-                        self.selected_sidebar_extension_id = None
-                        self.sidebar_extension_menu_rect = None
+                        if self.selected_library_module_id == clicked_library_module:
+                            self.close_menus()
+                        else:
+                            self.selected_library_module_id = clicked_library_module
+                            self.selected_sidebar_extension_id = None
+                            self.sidebar_extension_menu_rect = None
                     else:
                         clicked_library_extension = next(
                             (extension_id for extension_id, rect in self.library_extension_hitboxes.items()
                              if rect.collidepoint(event.pos)), None
                         )
                         if clicked_library_extension is not None:
-                            self.selected_sidebar_extension_id = clicked_library_extension
-                            self.selected_module_id = None
-                            self.selected_library_module_id = None
-                            self.add_module_menu_rect = None
-                            self.extension_removal_mode = False
-                            self.extension_add_mode = False
+                            if self.selected_sidebar_extension_id == clicked_library_extension:
+                                self.close_menus()
+                            else:
+                                self.selected_sidebar_extension_id = clicked_library_extension
+                                self.selected_module_id = None
+                                self.selected_library_module_id = None
+                                self.add_module_menu_rect = None
+                                self.extension_removal_mode = False
+                                self.extension_add_mode = False
                         else:
-                            self.selected_sidebar_extension_id = None
-                            self.sidebar_extension_menu_rect = None
-                            self.selected_module_id = None
-                            self.extension_removal_mode = False
-                            self.selected_library_module_id = None
+                            self.close_menus()
         if event.type == pygame.MOUSEWHEEL:
             rects = screen_rects(self.surface_size)
             position = getattr(event, "pos", self.mouse_position)
@@ -159,7 +187,7 @@ class CodeScreen(Screen):
         self.draw_library(surface, rects["library"], self.scroll_offsets["library"])
         self.draw_workspace(surface, rects["workspace"], self.scroll_offsets["workspace"])
         self.draw_state(surface, rects["state"], self.scroll_offsets["state"])
-        footer = self.render("READ-ONLY PREVIEW // PLAYER DATA", self.tiny_font,
+        footer = self.render("INTERACTIVE PREVIEW // PLAYER DATA", self.tiny_font,
                              constants.MUTED_TEXT_COLOR)
         surface.blit(footer, (18, surface.get_height() - footer.get_height() - 18))
         # Popups are rendered last so they sit above every panel and card.
@@ -176,8 +204,10 @@ class CodeScreen(Screen):
 
     def draw_navigation(self, surface):
         rect = self.navigation_rect
-        pygame.draw.rect(surface, constants.CODE_ITEM_COLOR, rect, border_radius=6)
-        pygame.draw.rect(surface, constants.CODE_TEAL, rect, width=1, border_radius=6)
+        fill = constants.CODE_HEADER if self.is_hovered(rect) else constants.CODE_ITEM_COLOR
+        pygame.draw.rect(surface, fill, rect, border_radius=6)
+        pygame.draw.rect(surface, constants.CODE_TEAL, rect, width=2 if self.is_hovered(rect) else 1,
+                         border_radius=6)
         label = self.render("NETWORK MAP", self.tiny_font, constants.CODE_TEAL)
         surface.blit(label, (rect.centerx - label.get_width() // 2,
                              rect.centery - label.get_height() // 2))
@@ -368,10 +398,13 @@ class CodeScreen(Screen):
 
     def library_item(self, surface, rect, offset, label, cost, color):
         item = pygame.Rect(rect.x + 18, rect.y + offset, rect.width - 36, 33)
-        pygame.draw.rect(surface, constants.CODE_ITEM_COLOR, item, border_radius=5)
-        pygame.draw.rect(surface, color, item, width=1, border_radius=5)
+        hovered = self.is_hovered(item)
+        pygame.draw.rect(surface, constants.CODE_HEADER if hovered else constants.CODE_ITEM_COLOR,
+                         item, border_radius=5)
+        pygame.draw.rect(surface, color, item, width=2 if hovered else 1, border_radius=5)
         self.draw_wrapped(surface, label.upper(), self.tiny_font, constants.TEXT_COLOR,
-                          pygame.Rect(item.x + 10, item.y + 5, item.width - 75, item.height - 8))
+                          pygame.Rect(item.x + 10, item.y + 5, item.width - 75, item.height - 8),
+                          max_lines=1)
         value = self.render(cost, self.tiny_font, color)
         surface.blit(value, (item.right - value.get_width() - 10, item.y + 10))
         return item
@@ -430,15 +463,18 @@ class CodeScreen(Screen):
                           pygame.Rect(menu.x + 16, menu.y + 38, menu.width - 32, 24), max_lines=1)
         button = pygame.Rect(menu.x + 16, menu.y + 70, menu.width - 32, 30)
         self.add_module_button_rect = button
-        pygame.draw.rect(surface, constants.CODE_ITEM_COLOR, button, border_radius=5)
-        pygame.draw.rect(surface, border, button, width=2, border_radius=5)
+        hovered = self.is_hovered(button)
+        pygame.draw.rect(surface, constants.CODE_HEADER if hovered else constants.CODE_ITEM_COLOR,
+                         button, border_radius=5)
+        pygame.draw.rect(surface, border, button, width=3 if hovered else 2, border_radius=5)
         surface.blit(self.render("ADD MODULE", self.tiny_font, border),
                      (button.x + 10, button.y + 8))
         if error:
             surface.blit(self.render("ERROR", self.tiny_font, constants.CODE_ERROR),
                          (menu.x + 16, menu.y + 108))
             self.draw_wrapped(surface, error, self.tiny_font, constants.CODE_ERROR,
-                              pygame.Rect(menu.x + 16, menu.y + 125, menu.width - 32, 48))
+                              pygame.Rect(menu.x + 16, menu.y + 125, menu.width - 32, 48),
+                              max_lines=2)
         else:
             surface.blit(self.render("medium tier", self.tiny_font, constants.CODE_BLUE),
                          (menu.x + 16, menu.y + 112))
@@ -494,10 +530,13 @@ class CodeScreen(Screen):
                                         self.cached_modules, module["instanceId"],
                                         self.selected_sidebar_extension_id)
             row_color = constants.CODE_ERROR if error else constants.CODE_TEAL
-            pygame.draw.rect(surface, constants.CODE_ITEM_COLOR, row, border_radius=4)
-            pygame.draw.rect(surface, row_color, row, width=1, border_radius=4)
-            surface.blit(self.render(module["instanceId"], self.tiny_font, row_color),
-                         (row.x + 9, row.y + 5))
+            hovered = self.is_hovered(row)
+            pygame.draw.rect(surface, constants.CODE_HEADER if hovered else constants.CODE_ITEM_COLOR,
+                             row, border_radius=4)
+            pygame.draw.rect(surface, row_color, row, width=2 if hovered else 1, border_radius=4)
+            self.draw_wrapped(surface, module["instanceId"], self.tiny_font, row_color,
+                              pygame.Rect(row.x + 9, row.y + 4, row.width - 18, row.height - 6),
+                              max_lines=1)
 
     def add_selected_extension(self, extension_id):
         if not self.selected_module_id:
@@ -554,7 +593,7 @@ class CodeScreen(Screen):
         self.panel(surface, workspace)
         surface.blit(self.render("MAIN PROGRAM", self.font, constants.TEXT_COLOR),
                      (workspace.x + 20, workspace.y + 25))
-        surface.blit(self.render("read-only configuration preview", self.tiny_font, constants.CODE_MUTED),
+        surface.blit(self.render("interactive configuration", self.tiny_font, constants.CODE_MUTED),
                      (workspace.x + 20, workspace.y + 54))
         old_clip = self.begin_panel_content(surface, workspace, top_padding=78, bottom_padding=12)
         content_offset = self.scroll_offsets["workspace"]
@@ -584,7 +623,7 @@ class CodeScreen(Screen):
                     "name", extension_id)
                 extension_lines.append((
                     extension_id,
-                    self.wrapped_lines(extension_name.upper(), self.tiny_font, 225),
+                    self.wrapped_lines(extension_name.upper(), self.tiny_font, 150),
                     module.get("extensionCosts", {}).get(
                         extension_id, self.module_catalog.get("extensions", {}).get(extension_id, {}).get("computeCost", 0)
                     ),
@@ -617,7 +656,8 @@ class CodeScreen(Screen):
         drop = drop_unscrolled.move(0, -content_offset)
         pygame.draw.rect(surface, constants.CODE_ITEM_COLOR, drop, border_radius=7)
         pygame.draw.rect(surface, constants.CODE_MUTED, drop, width=1, border_radius=7)
-        surface.blit(self.render("INTERACTIVE EDITING: NOT ENABLED", self.small_font, constants.CODE_MUTED),
+        surface.blit(self.render("SELECT MODULES OR EXTENSIONS FROM THE LIBRARY", self.small_font,
+                                 constants.CODE_MUTED),
                      (drop.x + 20, drop.y + 12))
         self.end_panel_content(surface, workspace, old_clip)
 
@@ -677,8 +717,11 @@ class CodeScreen(Screen):
             if action == "INCREASE COMPUTE" and module_compute_error(
                     self.player, self.module_catalog, module["instanceId"], 1):
                 action_color = constants.CODE_ERROR
-            pygame.draw.rect(surface, constants.CODE_ITEM_COLOR, row, border_radius=4)
-            pygame.draw.rect(surface, action_color, row, width=1, border_radius=4)
+            hovered = self.is_hovered(row)
+            pygame.draw.rect(surface, constants.CODE_HEADER if hovered else constants.CODE_ITEM_COLOR,
+                             row, border_radius=4)
+            pygame.draw.rect(surface, action_color, row, width=2 if hovered else 1,
+                             border_radius=4)
             surface.blit(self.render(action, self.tiny_font, action_color),
                          (row.x + 9, row.y + 5))
 
@@ -694,10 +737,15 @@ class CodeScreen(Screen):
                 row = pygame.Rect(menu.x + 16, heading_y + 22 + index * 29,
                                   menu.width - 32, 23)
                 self.extension_removal_rects[extension_id] = row
-                pygame.draw.rect(surface, constants.CODE_ITEM_COLOR, row, border_radius=4)
-                pygame.draw.rect(surface, constants.CODE_PURPLE, row, width=1, border_radius=4)
-                surface.blit(self.render(definition.get("name", extension_id), self.tiny_font,
-                                         constants.CODE_PURPLE), (row.x + 9, row.y + 5))
+                hovered = self.is_hovered(row)
+                pygame.draw.rect(surface, constants.CODE_HEADER if hovered else constants.CODE_ITEM_COLOR,
+                                 row, border_radius=4)
+                pygame.draw.rect(surface, constants.CODE_PURPLE, row,
+                                 width=2 if hovered else 1, border_radius=4)
+                self.draw_wrapped(surface, definition.get("name", extension_id), self.tiny_font,
+                                  constants.CODE_PURPLE,
+                                  pygame.Rect(row.x + 9, row.y + 4, row.width - 18, row.height - 6),
+                                  max_lines=1)
         if self.extension_add_mode:
             heading_y = menu.y + 237
             surface.blit(self.render("SELECT EXTENSION TO ADD", self.tiny_font, constants.CODE_AMBER),
@@ -713,10 +761,14 @@ class CodeScreen(Screen):
                 error = extension_add_error(self.player, self.module_catalog,
                                             self.cached_modules, module["instanceId"], extension_id)
                 row_color = constants.CODE_ERROR if error else constants.CODE_PURPLE
-                pygame.draw.rect(surface, constants.CODE_ITEM_COLOR, row, border_radius=4)
-                pygame.draw.rect(surface, row_color, row, width=1, border_radius=4)
-                surface.blit(self.render(definition.get("name", extension_id), self.tiny_font,
-                                         row_color), (row.x + 9, row.y + 5))
+                hovered = self.is_hovered(row)
+                pygame.draw.rect(surface, constants.CODE_HEADER if hovered else constants.CODE_ITEM_COLOR,
+                                 row, border_radius=4)
+                pygame.draw.rect(surface, row_color, row, width=2 if hovered else 1, border_radius=4)
+                self.draw_wrapped(surface, definition.get("name", extension_id), self.tiny_font,
+                                  row_color,
+                                  pygame.Rect(row.x + 9, row.y + 4, row.width - 18, row.height - 6),
+                                  max_lines=1)
 
     def remove_selected_module(self):
         """Remove the selected module, then refresh derived display state."""
@@ -764,10 +816,14 @@ class CodeScreen(Screen):
             )
 
     def module_card(self, surface, rect, module):
-        pygame.draw.rect(surface, constants.CODE_ITEM_COLOR, rect, border_radius=8)
+        hovered = self.is_hovered(rect)
+        selected = self.selected_module_id == module["instanceId"]
+        pygame.draw.rect(surface, constants.CODE_HEADER if hovered or selected else constants.CODE_ITEM_COLOR,
+                         rect, border_radius=8)
         inactive = module["state"] == "blocked"
         color = constants.CODE_ERROR if inactive else constants.CODE_TEAL
-        pygame.draw.rect(surface, color, rect, width=2, border_radius=8)
+        pygame.draw.rect(surface, color, rect, width=3 if hovered or selected else 2,
+                         border_radius=8)
         pygame.draw.rect(surface, constants.CODE_HEADER, (rect.x, rect.y, rect.width, 28), border_radius=8)
         surface.blit(self.render(module["name"].upper(), self.tiny_font, constants.TEXT_COLOR),
                      (rect.x + 18, rect.y + 8))
@@ -789,12 +845,13 @@ class CodeScreen(Screen):
         y = rect.y + 8
         for extension_id, lines, extension_cost in extension_lines:
             definition = self.module_catalog.get("extensions", {}).get(extension_id, {})
-            self.draw_wrapped(surface, "  " + " ".join(lines), self.tiny_font,
-                              constants.CODE_PURPLE,
-                              pygame.Rect(rect.x + 15, y, rect.width - 30, rect.height - 18),
-                              max_lines=len(lines))
             cost = self.render(f"COMPUTE  {extension_cost} CU",
                                self.tiny_font, constants.CODE_MUTED)
+            name_rect = pygame.Rect(rect.x + 15, y,
+                                     max(1, rect.width - 30 - cost.get_width() - 8),
+                                     rect.height - 18)
+            self.draw_wrapped(surface, "  " + " ".join(lines), self.tiny_font,
+                              constants.CODE_PURPLE, name_rect, max_lines=len(lines))
             surface.blit(cost, (rect.right - cost.get_width() - 14, y))
             y += max(1, len(lines)) * self.tiny_font.get_height() + 4
 
