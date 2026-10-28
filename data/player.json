@@ -12,68 +12,71 @@
       "connectionSecurity": true
     }
   },
-  "program": {
-    "modules": [
-      {
-        "instanceId": "scan-01",
-        "definitionId": "scan",
-        "compute": 8
+  "program": [
+    {
+      "instanceId": "01",
+      "modules": [
+        {
+          "instanceId": "scan-01",
+          "definitionId": "scan",
+          "compute": 8
+        },
+        {
+          "instanceId": "signal-disrupter-01",
+          "definitionId": "signal-disrupter",
+          "compute": 20
+        },
+        {
+          "instanceId": "signal-disrupter-02",
+          "definitionId": "signal-disrupter",
+          "compute": 20
+        },
+        {
+          "instanceId": "signal-disrupter-03",
+          "definitionId": "signal-disrupter",
+          "compute": 20
+        },
+        {
+          "instanceId": "self-compiler-01",
+          "definitionId": "self-compiler",
+          "compute": 4
+        },
+        {
+          "instanceId": "data-harvester-01",
+          "definitionId": "data-harvester",
+          "compute": 24
+        },
+        {
+          "instanceId": "data-harvester-02",
+          "definitionId": "data-harvester",
+          "compute": 24
+        },
+        {
+          "instanceId": "data-harvester-03",
+          "definitionId": "data-harvester",
+          "compute": 24
+        }
+      ],
+      "activeExtensions": {
+        "scan-01": [
+          "security-scan",
+          "passive-scan",
+          "broadband-receiver"
+        ],
+        "signal-disrupter-01": [
+          "firewall-daemon"
+        ],
+        "self-compiler-01": [
+          "defrag-patch"
+        ]
       },
-      {
-        "instanceId": "signal-disrupter-01",
-        "definitionId": "signal-disrupter",
-        "compute": 20
-      },
-      {
-        "instanceId": "signal-disrupter-02",
-        "definitionId": "signal-disrupter",
-        "compute": 20
-      },
-      {
-        "instanceId": "signal-disrupter-03",
-        "definitionId": "signal-disrupter",
-        "compute": 20
-      },
-      {
-        "instanceId": "self-compiler-01",
-        "definitionId": "self-compiler",
-        "compute": 4
-      },
-      {
-        "instanceId": "data-harvester-01",
-        "definitionId": "data-harvester",
-        "compute": 24
-      },
-      {
-        "instanceId": "data-harvester-02",
-        "definitionId": "data-harvester",
-        "compute": 24
-      },
-      {
-        "instanceId": "data-harvester-03",
-        "definitionId": "data-harvester",
-        "compute": 24
+      "compile": {
+        "state": "finished",
+        "progress": 100,
+        "remainingSeconds": 0
       }
-    ],
-    "activeExtensions": {
-      "scan-01": [
-        "security-scan",
-        "passive-scan",
-        "broadband-receiver"
-      ],
-      "signal-disrupter-01": [
-        "firewall-daemon"
-      ],
-      "self-compiler-01":[
-        "defrag-patch"
-      ]
-    },
-    "compile": {
-      "state": "finished",
-      "progress": 100,
-      "remainingSeconds": 0
     }
-  },
+  ],
   "activeNodes": {
     "primary": "001",
     "secondary": [
