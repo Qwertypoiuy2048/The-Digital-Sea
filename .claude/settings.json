@@ -27,8 +27,8 @@
       "Bash(git push * -f*)",
       "Bash(git reset:*)",
       "Bash(rm:*)",
-      "Bash([insert package manager here] install:*)",
-      "Bash([insert package manager here] run:*)"
+      "Bash(pnpm install:*)",
+      "Bash(pnpm run:*)"
     ],
     "deny": [
       "Bash(git push --force:*)",

@@ -8,13 +8,13 @@
 
 | ID | Title | Owner | Tier | State | Branch | PR |
 |----|-------|-------|------|-------|--------|----|
-| _none_ | | | | | | |
+| [T-001](./T-001.md) | Bootstrap `/docs/` folder | review-coordinator | 1 | in-review | — | — |
 
 ## Backlog — Tier 1 (blocks feature work)
 
 | ID | Title | Owner | State |
 |----|-------|-------|-------|
-| [T-001](./T-001.md) | Bootstrap `/docs/` folder | review-coordinator | proposed |
+| [T-001](./T-001.md) | Bootstrap `/docs/` folder | review-coordinator | in-review |
 | [T-002](./T-002.md) | Adopt the workspace model (multi-repo only) | review-coordinator | proposed |
 | [T-001.1](./T-001.1.md) | Draft docs index | analyst | proposed |
 | [T-001.2](./T-001.2.md) | Write `architecture.md` | architect | proposed |
