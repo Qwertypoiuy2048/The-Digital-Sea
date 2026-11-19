@@ -4,8 +4,8 @@
 # More-specific patterns override less-specific ones (last match wins per GitHub).
 # Keep this file in sync with /docs/ownership.md.
 #
-# IMPORTANT: every entry below uses [insert ...] placeholders. Replace with real
-# GitHub handles / teams before this file does anything useful.
+# Ownership is currently assigned to @Qwertypoiuy2048. Add teams or backups as the
+# project grows, and keep /docs/ownership.md synchronized.
 
 # Repo-wide default — at least one human approver required on every PR
 *                               @Qwertypoiuy2048
@@ -33,7 +33,7 @@
 /.starter/                      @Qwertypoiuy2048 @Qwertypoiuy2048
 
 # Tasks ledger — DRI sets stay loose, but require any DRI to approve
-/tasks/                         @[insert default-reviewers team here]
+/tasks/                         @Qwertypoiuy2048
 
 # Living docs — unanimous-consensus rule applies; CODEOWNERS adds a human review gate on top
 /docs/                          @Qwertypoiuy2048 @Qwertypoiuy2048 @Qwertypoiuy2048

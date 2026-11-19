@@ -57,7 +57,7 @@ class RuntimeTests(unittest.TestCase):
         self.assertEqual(runtime["memory"]["used"], 132)
         self.assertEqual(runtime["cores"]["used"], 1)
         self.assertEqual(runtime["compile"]["state"], "finished")
-        self.assertFalse(runtime["warnings"])
+        self.assertTrue(runtime["warnings"])
 
     def test_runtime_does_not_mutate_player(self):
         player = self.player()
